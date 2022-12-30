@@ -1,0 +1,27 @@
+* = 0 or more
+? = optional
+
+idList  = ?id *( "," id )
+exprList  = ?expr *( "," expr )
+
+varStmt = 'var' id '=' expr
+fnStmt  = 'fn' id '(' idList ')' '{' *stmt '}'
+returnStmt = 'return' expr
+ifStmt  = 'if' expr '{' *stmt '}' ?('else' '{' *stmt '}')
+whileStmt = 'while' expr '{' *stmt '}'
+stmt    = varStmt
+        | fnStmt
+        | returnStmt
+        | ifStmt
+        | whileStmt
+        | expr
+
+simple  = id
+        | num
+        | str
+        | bool
+        | fn '(' idList ')' '{' *stmt '}'
+call  = simple ?( '(' exprList ')' )
+expr  = call ?( op expr )
+
+op    = '+' | '-' | '*' | '/' | '==' | '!=' | '<' | '>'
