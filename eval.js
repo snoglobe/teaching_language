@@ -22,8 +22,8 @@ function execute(ast, scope = variables) {
             scope[ast.name] = evaluate(ast.value, scope);
             break;
         case AstType.Fn:
-            variables[ast.name] = function (...args) {
-                let localScope = {...scope};
+            scope[ast.name] = function (...args) {
+                let localScope = Object.assign({}, scope);
                 for (let i = 0; i < ast.args.length; i++) {
                     localScope[ast.args[i]] = args[i];
                 }
@@ -91,7 +91,7 @@ function evaluate(ast, scope = variables) {
                 case "==":
                     return evaluate(ast.left, scope) === evaluate(ast.right, scope);
                 case "=":
-                    return variables[ast.left.name] = evaluate(ast.right, scope);
+                    return scope[ast.left.name] = evaluate(ast.right, scope);
                 case "<":
                     return evaluate(ast.left, scope) < evaluate(ast.right, scope);
                 case ">":
@@ -110,7 +110,7 @@ function evaluate(ast, scope = variables) {
             return evaluate(ast.func, scope)(...args);
         case AstType.Lambda:
             return function (...args) {
-                let localScope = {...scope};
+                let localScope = Object.assign({}, scope);
                 for (let i = 0; i < ast.args.length; i++) {
                     localScope[ast.args[i]] = args[i];
                 }
